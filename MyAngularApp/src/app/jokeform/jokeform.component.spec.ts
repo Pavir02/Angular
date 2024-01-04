@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { JokelistComponent } from './jokelist.component';
+import { JokelistComponent } from './jokeform.component';
 
 describe('JokelistComponent', () => {
   let component: JokelistComponent;

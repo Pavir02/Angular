@@ -1,0 +1,20 @@
+<!-- <div class="card card-block"
+    *ngFor="let joke of jokes">
+    <h4 class="card-title">{{joke.setup}}</h4>
+    <p class="card-text" [hidden]= "joke.hide" >{{joke.PunchLine}}</p>
+    <button class=btn btn-primary (click)="joke.toggle()"> Tell Me! </button>
+</div> -->
+
+<!-- <app-joke *ngFor="let joke of jokes"></app-joke> -->
+
+<div class="card card-block">
+    <h4 class="card-title">Create Joke</h4>
+    <div class="form-group">
+        <input type="text" class="form-control" placeholder="Enter the Setup" #setup>
+    </div>
+    <div class="form-group">
+        <input type="text" class="form-control" placeholder="Enter the PunchLine" #punchline>
+    </div>
+    <button type="button" class="btn btn-primary" (click)="createJoke(setup.value, punchline.value)"> Create
+    </button>
+</div>
