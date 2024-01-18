@@ -1,0 +1,55 @@
+<h4>Ng Class</h4>
+<ul>
+    <li *ngFor="let person of people" 
+        [ngClass]="{'text-success':true}">
+        {{person.name}} ({{person.country}})
+    </li>
+</ul>
+
+
+<!-- The classes we set using ngClass will be applied if the expression on the right side
+     evaluates to true -->
+
+<h4>Ng Class with JS expression</h4>
+<ul>
+    <li *ngFor="let person of people" 
+        [ngClass]="{
+        'text-success':person.country === 'UK',
+        'text-primary':person.country === 'USA',
+        'text-danger' :person.country === 'CAN'
+        }">
+        {{person.name}} ({{person.country}})
+    </li>
+</ul>
+
+<!-- NgClass will be useful if we want to set multiple classes.
+If we want to set a single class, we have a short form [class] like below -->
+
+<h4>[Class]</h4>
+<ul>
+    <li *ngFor="let person of people" [class]="'text-success'">
+        {{person.name}} ({{person.country}})
+    </li>
+</ul>
+
+<!-- We could add a function as well to [class]. 
+Whatever string that the function returns will be applied to the class -->
+<!-- But this syntax has a  big drawback that it replaces all the existing classes.
+If we want it to add on top of already existing classes, we can use below extended syntax -->
+
+<h4>[Class.className]</h4>
+<ul>
+    <li *ngFor="let person of people" [class.text-success]="true">
+        {{person.name}} ({{person.country}})
+    </li>
+</ul>
+
+<h4>[Class.className with JS expression]</h4>
+<ul>
+    <li *ngFor="let person of people" 
+        [class.text-success]="person.country === 'UK'"
+        [class.text-primary]="person.country === 'USA'"
+        [class.text-danger]="person.country === 'CAN'">
+        {{person.name}} ({{person.country}})
+    </li>
+</ul>

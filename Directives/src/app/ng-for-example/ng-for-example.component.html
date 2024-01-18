@@ -1,0 +1,46 @@
+<h4>NgFor</h4>
+<ul>
+    <li *ngFor="let person of people; let i= index">       
+        {{i+1}} - {{person.name}}  ({{person.age}})
+    </li>
+
+<!-- We can re-write these structural directives: *ngFor, *ngIf and *ngSwitch
+using the ng-template tag which is called the long form of writing structural directives -->
+
+    <h4> Re-writing ngFor using ng-template long form syntax </h4>
+    <ng-template ngFor let-person [ngForOf]="people">
+        <li>{{person.name}} ({{person.age}}) </li>
+    </ng-template>
+</ul>
+
+
+<h4>NgIf ( age < 30 )</h4>
+<ul *ngFor="let person of people">    
+    <li *ngIf="person.age < 30">
+         {{person.name}} ({{person.age}})
+    </li>
+
+    <ng-template [ngIf]="person.age < 30">
+    <h4> Re-writing ngIf using ng-template long form syntax </h4>
+        <li>
+           {{person.name}} ({{person.age}})
+        </li>
+    </ng-template>
+</ul>
+
+
+<h4> NgSwitch </h4>
+<ul *ngFor="let person of people" [ngSwitch]="person.country">
+    <li *ngSwitchCase = "'UK'" style="color:green" class="text-success">
+          {{person.name}} ({{person.country}})
+    </li>
+    <li *ngSwitchCase="'US'" style="color:blueviolet" class="text-primary">
+        {{person.name}} ({{person.country}})
+    </li>
+    <li *ngSwitchCase="'CAN'" style="color:red" class="text-danger">
+        {{person.name}} ({{person.country}})
+    </li>
+    <li *ngSwitchDefault style="color:chocolate" class="text-warning">
+        {{person.name}} ({{person.country}})
+    </li>
+</ul>

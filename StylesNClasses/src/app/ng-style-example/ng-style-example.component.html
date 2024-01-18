@@ -1,0 +1,50 @@
+<h4>NgStyle</h4>
+
+<!-- Here, we are passing something into the ngStyle directive, 
+    hence we wrap it with input property binding-->
+
+<ul>
+    <li *ngFor="let person of people" [ngStyle]="{'background-color':'green'}">
+        {{person.name}} ({{person.country}})
+    </li>
+</ul>
+
+<!-- ngStyle is more useful when the value is dynamic, by assigning JS expression -->
+
+
+<h4>Setting style dynamically based on a JS expression </h4>
+<ul>
+    <li *ngFor="let person of people" [ngStyle]="{'background-color': person.country==='UK'?'yellow':'cyan'}">
+        {{person.name}} ({{person.country}})
+    </li>
+</ul>
+
+<h4>Setting style dynamically by calling a function on the component </h4>
+<ul>
+    <li *ngFor="let person of people" [ngStyle]="{'background-color': getColor(person.country)}">
+        {{person.name}} ({{person.country}})
+    </li>
+</ul>
+
+<h4> Setting styles individually using the style property syntax </h4>
+<ul>
+    <li *ngFor="let person of people" [style.color]="getColor(person.country)">
+        {{person.name}} ({{person.country}})
+    </li>
+</ul>
+
+
+<!-- if we want to set some style with units like px or em then we need to specify like below : property.unit -->
+<h4> Setting font-size using [ngStyle] = 'font-size.px':18 </h4>
+<ul>
+    <li *ngFor="let person of people" [ngStyle]="{'font-size.px':18}">
+        {{person.name}} ({{person.country}})
+    </li>
+</ul>
+
+<h4> Setting font-size using [style.font-size.px] = 18 </h4>
+<ul>
+    <li *ngFor="let person of people" [style.font-size.px] = 18>
+        {{person.name}} ({{person.country}})
+    </li>
+</ul>

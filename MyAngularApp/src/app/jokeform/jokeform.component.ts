@@ -11,28 +11,103 @@ import { Component,
   ElementRef,
   ContentChildren,
   ContentChild,
-  AfterContentInit} from '@angular/core';
+  AfterContentInit,
+  Directive,
+  Renderer2,
+  HostListener,
+  HostBinding} from '@angular/core';
  
+@Directive({
+  selector:"[ccCardHover]"
+})
+export class CardHoverDirective
+{
+  //we can use this config object in the below query selector, to make it re-usable.
+  //Also, the reason we use config object, is that we can add further config parameters 
+  @Input('ccCardHover') config = {
+    // querySelector: '.card-text'   
+    //instead of hard-coding like above, we can declare it as general string and configure 
+    //it directly on the host element
+    querySelector: 'string'  
+  }
+
+  constructor(private el: ElementRef, private renderer: Renderer2) 
+  { 
+    //el.nativeElement.style.backgroundColor = 'gray'; 
+    //The above syntax assumes that our application will always be running in the environment of a browwser
+    //i.e always be running with DOM. But angular supports to run in multiple different envts - 
+    // including server-side, node etc.
+
+    //To support in all the environments, we can use below syntax. i.e platform independent way via
+    //Renderer2
+    //renderer.setStyle(el.nativeElement, 'backgroundColor', 'gray');
+  }
+  
+
+
+  @HostListener('mouseover') onMouseOver()
+  {
+    //let punchlineEl = this.el.nativeElement.querySelector('.card-text');
+
+    //pass the class of the punchline element into the queryselector using the config object 
+    //instead of sending hard-coded name like above
+    let punchlineEl = this.el.nativeElement.querySelector(this.config.querySelector);
+    this.renderer.setStyle(punchlineEl, 'display', 'block');
+    this.isHovering = true;
+  }
+
+  @HostListener('mouseout') onMouseOut() {
+    //pass the class of the punchline element into the queryselector
+    let punchlineEl = this.el.nativeElement.querySelector(this.config.querySelector);
+    this.renderer.setStyle(punchlineEl, 'display', 'none');
+    this.isHovering = false;
+  }
+
+  //As well as listening to output events from the host element using HostListener decorator,
+  //a directive can also bind to input properties on the host element with HostBinding decorator
+
+  //using the HostBinding decorator, a directive can link the internal properties of the directive to
+  //input properties of the host element
+
+  //So, if the internal property on the directive changes, the input property on the host element will
+  //also change.
+  //We pass the name of the property on the host element that we want to change/bind to, as the parameter
+  //to HostBinding()
+  //ex: Here, we are changing the card-outline-primary, it sets this class if isHovering is true
+  @HostBinding('class.card-outline-primary') private isHovering: boolean = false;
+}
+
+
 @Component({
   selector: 'joke',
   template:  ` 
-  <div class="card card-block">
+
+  <!-- We can add our own configurable object like below where we are using 'p' tag as the queryselector -->
+  
+  <!-- <div class="card card-block" ccCardHover [config]="{querySelector:'p'}"> -->
+
+   <!-- Instead of having a seperate config input like above, we can input directly into our directive name itself [ccCardHover]
+		by passing the direcive name 'ccCardHover' as alias to the input decorator of config. -->
+    
+  <!-- So, now we can use and configure our directive in one statement. -->
+    <div class="card card-block" [ccCardHover]="{querySelector:'p'}">
     <h4 class="card-title"> 
-       <!-- content projection -->
+       <!-- content projected from jokelist component -->
        <ng-content select=".setup"></ng-content>  <!-- {{ joke.setup }} -->
     </h4>
-    <p class= "card-text" [hidden] = "joke.hide" > 
-     <!-- content projection -->
-    <ng-content select=".punchline"></ng-content>    <!--  joke.PunchLine -->
+    <!-- <p class= "card-text" [hidden] = "joke.hide" >  -->     
+    <!-- <p class="card-text" *ngIf = "!joke.hide"> -->
+    <p class="card-text" [style.display] = "'none'">      
+     <!-- content projected from jokelist component-->
+      <ng-content select=".punchline"></ng-content>    <!--  joke.PunchLine -->
     </p>
-    <button class= "btn btn-primary" (click)="joke.toggle()" > Tell Me! </button>
+    <!-- <button class= "btn btn-primary" (click)="joke.toggle()"> Tell Me! </button> -->
   </div>  
   `
 })
 export class JokeComponent{
   @Input('joke') joke!:Joke;   
 }
-
 
 @Component({
   selector: 'joke-list',
@@ -42,14 +117,13 @@ export class JokeComponent{
   <joke *ngFor="let j of jokes" [joke]="j">
   <!-- content projection -->  
     <span class="setup"> {{j.setup}}? </span>
-    <h1 class="punchline"> {{ j.PunchLine }}  </h1>    
+    <p class="punchline"> {{ j.PunchLine }}  </p>    
   </joke>
   
   <h4> Content Jokes</h4>
   <!-- projected from the parent component -->
   <ng-content></ng-content> 
-  `
-  
+  `  
 })
 export class JokelistComponent implements OnInit, AfterViewInit, AfterContentInit {
   
